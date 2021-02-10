@@ -33,21 +33,36 @@ function MyMapComponent() {
         console.log(routePos);
     };
 
+    const downloadTxtFile = () => {
+        const element = document.createElement('a');
+
+        const file = new Blob(['[', routePos.join('],['), ']'], {
+            type: 'application/json',
+        });
+        element.href = URL.createObjectURL(file);
+        element.download = 'routePos.txt';
+        document.body.appendChild(element);
+        element.click();
+    };
+
     return (
-        <MapContainer center={[50.5, 30.5]} zoom={13}>
-            <MyComponent addPos={addPos} />
-            {routePos.map((pos) => (
-                <Circle
-                    center={pos}
-                    pathOptions={fillBlueOptions}
-                    radius={100}
+        <>
+            <button onClick={downloadTxtFile}>Download Position</button>
+            <MapContainer center={[50.5, 30.5]} zoom={13}>
+                <MyComponent addPos={addPos} />
+                {routePos.map((pos) => (
+                    <Circle
+                        center={pos}
+                        pathOptions={fillBlueOptions}
+                        radius={100}
+                    />
+                ))}
+                <TileLayer
+                    url='https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png'
+                    attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
                 />
-            ))}
-            <TileLayer
-                url='https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png'
-                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-            />
-        </MapContainer>
+            </MapContainer>
+        </>
     );
 }
 
